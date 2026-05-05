@@ -1,5 +1,5 @@
 import streamlit as st
-import os
+import pandas as pd
 
 st.set_page_config(
     page_title="PatrolIQ - Smart Safety Analytics",
@@ -14,7 +14,7 @@ st.markdown("---")
 st.markdown("""
 ### Urban Crime Intelligence for Chicago PD
 
-This platform analyzes **500,000 crime records** from Chicago to help law enforcement
+This platform analyzes crime records from Chicago to help law enforcement
 make data-driven decisions on patrol deployment and resource allocation.
 
 Navigate using the sidebar:
@@ -28,16 +28,20 @@ Navigate using the sidebar:
 
 st.markdown("---")
 
-data_ready = os.path.exists(os.path.join("data", "processed.parquet"))
+# ✅ NEW: Directly load preprocessed data
+@st.cache_data
+def load_data():
+    return pd.read_parquet("processed_small.parquet")
 
-if data_ready:
-    st.success("✅ Processed data found. All pages are ready to use.")
-else:
-    st.warning("⚠️ Processed data not found. Run `python data_pipeline.py` first.")
-    st.code("python data_pipeline.py", language="bash")
+try:
+    df = load_data()
+    st.success("✅ Data loaded successfully. All pages are ready to use.")
+except Exception as e:
+    st.error("❌ Data file missing or failed to load.")
+    st.stop()
 
 col1, col2, col3 = st.columns(3)
-col1.info("**Dataset**\n\nChicago Crime Records\n500,000 sampled records\n22 input features")
+col1.info("**Dataset**\n\nChicago Crime Records\nSampled dataset\nOptimized for fast loading")
 col2.info("**ML Techniques**\n\nKMeans · DBSCAN · Hierarchical\nPCA · t-SNE\nMLflow Tracking")
 col3.info("**Goal**\n\nIdentify crime hotspots\nTemporal patterns\nOptimize patrol routes")
 
