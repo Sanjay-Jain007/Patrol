@@ -2,23 +2,21 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import os
 
 st.set_page_config(page_title="EDA", page_icon="📊", layout="wide")
 st.title("📊 Exploratory Data Analysis")
 st.markdown("---")
 
-DATA_PATH = os.path.join("data", "processed.parquet")
-
+# ✅ FIXED: load from small file (no pipeline dependency)
 @st.cache_data
 def load_data():
-    return pd.read_parquet(DATA_PATH)
+    return pd.read_parquet("processed_small.parquet")
 
-if not os.path.exists(DATA_PATH):
-    st.warning("Run `python data_pipeline.py` first to generate processed data.")
+try:
+    df = load_data()
+except:
+    st.error("Data file not found.")
     st.stop()
-
-df = load_data()
 
 # Overview metrics
 col1, col2, col3, col4 = st.columns(4)
