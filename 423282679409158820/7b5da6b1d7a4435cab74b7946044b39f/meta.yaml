@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/Sanjay/Desktop/GUVI/project 4/patroliq2/mlruns/423282679409158820/7b5da6b1d7a4435cab74b7946044b39f/artifacts
+end_time: 1777982218438
+entry_point_name: ''
+experiment_id: '423282679409158820'
+lifecycle_stage: active
+run_id: 7b5da6b1d7a4435cab74b7946044b39f
+run_name: DBSCAN_Geo
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777982217419
+status: 3
+tags: []
+user_id: Sanjay

@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/Sanjay/Desktop/GUVI/project 4/patroliq2/mlruns/159945545267522088/e99e20ab8de44444be819734fd831fe9/artifacts
+end_time: 1777983527089
+entry_point_name: ''
+experiment_id: '159945545267522088'
+lifecycle_stage: active
+run_id: e99e20ab8de44444be819734fd831fe9
+run_name: PCA_3_components
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777983527041
+status: 3
+tags: []
+user_id: Sanjay

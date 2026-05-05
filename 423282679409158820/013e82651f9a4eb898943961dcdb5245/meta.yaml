@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/Sanjay/Desktop/GUVI/project 4/patroliq2/mlruns/423282679409158820/013e82651f9a4eb898943961dcdb5245/artifacts
+end_time: 1777982217418
+entry_point_name: ''
+experiment_id: '423282679409158820'
+lifecycle_stage: active
+run_id: 013e82651f9a4eb898943961dcdb5245
+run_name: KMeans_Geo_k7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777980994452
+status: 3
+tags: []
+user_id: Sanjay

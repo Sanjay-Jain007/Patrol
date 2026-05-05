@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/Sanjay/Desktop/GUVI/project 4/patroliq2/mlruns/159945545267522088/2a8331d7b3f9455d82557a3b6c82940f/artifacts
+end_time: 1777983531952
+entry_point_name: ''
+experiment_id: '159945545267522088'
+lifecycle_stage: active
+run_id: 2a8331d7b3f9455d82557a3b6c82940f
+run_name: tSNE_2D
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777983527105
+status: 3
+tags: []
+user_id: Sanjay
