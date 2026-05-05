@@ -10,7 +10,7 @@ st.markdown("---")
 # ✅ FIXED: load from small file (no pipeline dependency)
 @st.cache_data
 def load_data():
-    return pd.read_parquet("data/processed_small.parquet")
+    return pd.read_parquet("processed_small.parquet")
 
 try:
     df = load_data()
