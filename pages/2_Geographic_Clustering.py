@@ -2,23 +2,21 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import os
 
 st.set_page_config(page_title="Geographic Clustering", page_icon="🗺️", layout="wide")
 st.title("🗺️ Geographic Crime Hotspot Clustering")
 st.markdown("---")
 
-DATA_PATH = os.path.join("data", "processed.parquet")
-
+# ✅ FIXED: load from processed_small.parquet
 @st.cache_data
 def load_data():
-    return pd.read_parquet(DATA_PATH)
+    return pd.read_parquet("processed_small.parquet")
 
-if not os.path.exists(DATA_PATH):
-    st.warning("Run `python data_pipeline.py` first.")
+try:
+    df = load_data()
+except:
+    st.error("Data file not found.")
     st.stop()
-
-df = load_data()
 
 # Sample for display speed
 plot_df = df.sample(min(50000, len(df)), random_state=42).copy()
@@ -54,7 +52,6 @@ with tab1:
     summary["Avg_Lon"] = summary["Avg_Lon"].round(4)
     st.dataframe(summary, use_container_width=True)
 
-    # Crime heatmap by cluster
     st.subheader("Crime Type Distribution per Cluster")
     top5 = df["Primary Type"].value_counts().head(5).index
     heat = df[df["Primary Type"].isin(top5)].groupby(
@@ -67,7 +64,7 @@ with tab1:
 # ─── DBSCAN ───
 with tab2:
     st.subheader("DBSCAN Density-Based Clustering")
-    st.markdown("Naturally detects dense crime areas. Points labeled **-1** are noise/outliers.")
+    st.markdown("Points labeled **-1** are noise/outliers.")
 
     df_db = df[df["DBSCAN_Geo_Cluster"] != -1].copy()
     df_noise = df[df["DBSCAN_Geo_Cluster"] == -1].copy()
@@ -82,7 +79,7 @@ with tab2:
                               color="DBSCAN_Geo_Cluster",
                               zoom=10, height=600,
                               mapbox_style="carto-positron",
-                              title="DBSCAN Dense Crime Clusters (noise excluded)",
+                              title="DBSCAN Dense Crime Clusters",
                               opacity=0.5,
                               color_continuous_scale="Viridis")
     st.plotly_chart(fig3, use_container_width=True)
@@ -90,8 +87,7 @@ with tab2:
 
 # ─── Hierarchical ───
 with tab3:
-    st.subheader("Hierarchical Clustering (Ward Linkage, k=7)")
-    st.markdown("Ran on 10,000 sample. Shows nested geographic crime zone relationships.")
+    st.subheader("Hierarchical Clustering (k=7)")
 
     df_hc = df[df["HC_Geo_Cluster"] != -1].copy()
 
@@ -116,15 +112,16 @@ with tab3:
 # ─── Comparison ───
 with tab4:
     st.subheader("Algorithm Comparison")
-    st.markdown("Metrics logged via MLflow during `data_pipeline.py` run.")
-
-    import mlflow
-    from mlflow.tracking import MlflowClient
-    MLFLOW_URI = os.path.abspath("mlruns")
-    mlflow.set_tracking_uri(f"file://{MLFLOW_URI}")
-    client = MlflowClient()
 
     try:
+        import mlflow
+        from mlflow.tracking import MlflowClient
+        import os
+
+        MLFLOW_URI = os.path.abspath("mlruns")
+        mlflow.set_tracking_uri(f"file://{MLFLOW_URI}")
+        client = MlflowClient()
+
         exp = client.get_experiment_by_name("Geographic_Clustering")
         if exp:
             runs = client.search_runs(experiment_ids=[exp.experiment_id])
@@ -134,16 +131,10 @@ with tab4:
                     "Algorithm": r.data.params.get("algorithm", r.info.run_name),
                     "Silhouette": round(r.data.metrics.get("silhouette_score", 0), 4),
                     "Davies-Bouldin": round(r.data.metrics.get("davies_bouldin_score", 0), 4)
-                            if "davies_bouldin_score" in r.data.metrics else "N/A"
+                        if "davies_bouldin_score" in r.data.metrics else "N/A"
                 })
             cmp_df = pd.DataFrame(rows)
             st.dataframe(cmp_df, use_container_width=True)
 
-            num_df = cmp_df[cmp_df["Davies-Bouldin"] != "N/A"].copy()
-            if not num_df.empty:
-                fig5 = px.bar(num_df, x="Algorithm", y="Silhouette",
-                              color="Algorithm", title="Silhouette Score Comparison",
-                              color_discrete_sequence=["#e74c3c", "#3498db", "#2ecc71"])
-                st.plotly_chart(fig5, use_container_width=True)
-    except Exception as e:
-        st.info(f"Run data_pipeline.py first to populate MLflow metrics. ({e})")
+    except:
+        st.info("MLflow data not available in deployment.")
