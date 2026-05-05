@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/Sanjay/Desktop/GUVI/project 4/patroliq2/mlruns/460137603000336045/a120cfdf815b44ff8acb189074e56688/artifacts
+end_time: 1777980874546
+entry_point_name: ''
+experiment_id: '460137603000336045'
+lifecycle_stage: active
+run_id: a120cfdf815b44ff8acb189074e56688
+run_name: KMeans_Temporal_k4
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777979496908
+status: 3
+tags: []
+user_id: Sanjay

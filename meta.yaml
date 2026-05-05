@@ -1,0 +1,8 @@
+artifact_location: file:///Users/Sanjay/Desktop/GUVI/project 4/patroliq2/mlruns/460137603000336045
+creation_time: 1777979496908
+experiment_id: '460137603000336045'
+last_update_time: 1777979496908
+lifecycle_stage: active
+name: Temporal_Clustering
+trace_location: null
+workspace: default
