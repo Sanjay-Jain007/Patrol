@@ -2,23 +2,21 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import os
 
 st.set_page_config(page_title="Temporal Clustering", page_icon="🕐", layout="wide")
 st.title("🕐 Temporal Crime Pattern Clustering")
 st.markdown("---")
 
-DATA_PATH = os.path.join("data", "processed.parquet")
-
+# ✅ FIXED: load from processed_small.parquet
 @st.cache_data
 def load_data():
-    return pd.read_parquet(DATA_PATH)
+    return pd.read_parquet("processed_small.parquet")
 
-if not os.path.exists(DATA_PATH):
-    st.warning("Run `python data_pipeline.py` first.")
+try:
+    df = load_data()
+except:
+    st.error("Data file not found.")
     st.stop()
-
-df = load_data()
 
 # ─── Peak hour analysis ───
 st.subheader("Crime Frequency by Hour")
@@ -78,8 +76,6 @@ st.plotly_chart(fig4, use_container_width=True)
 st.markdown("---")
 
 st.subheader("Temporal Cluster Profiles (KMeans k=4)")
-st.markdown("4 time-based crime patterns identified by the pipeline.")
-
 profile = df.groupby("Temporal_Cluster").agg(
     Total_Crimes=("Primary Type", "count"),
     Avg_Hour=("Hour", "mean"),
